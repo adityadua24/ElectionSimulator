@@ -7,6 +7,7 @@
 package asgn1Election;
 
 import asgn1Util.Strings;
+import asgn1Election.ElectionException;
 
 /**
  *
@@ -47,7 +48,18 @@ public class Candidate {
 	 * @throws ElectionException if <code>isNullOrEmpty(candName,candParty,candAbbrev) OR voteCount <0</code>
 	 */
 	public Candidate(String candName, String candParty, String candAbbrev, int voteCount) throws ElectionException {
-		
+		if(        (!(candName.isEmpty()) 
+				&& (!(candParty.isEmpty()))
+				&& (!(candAbbrev.isEmpty()))
+				&& (!(voteCount<0)))) {
+			this.name = candName;
+			this.party = candParty;
+			this.abbrev = candAbbrev;
+			this.voteCount = voteCount;
+		} 
+		else {
+			throw new ElectionException("Invalid data passed to candidate constructor");
+		}	
 	}
 
 	/**
@@ -67,6 +79,7 @@ public class Candidate {
 		len = ElectionManager.FullPartyField - partyStr.length();
 		str += partyStr + Strings.createPadding(' ',len);
 		str += abbrevStr;
+		str += toString();
 		return str;
 	}
 
@@ -77,7 +90,8 @@ public class Candidate {
 	 * @throws ElectionException - see {@link #Candidate(String,String,String,int)}. 
 	 */
 	public Candidate copy() throws ElectionException {
-		
+		Candidate candidateCopy = new Candidate(name, party, abbrev, voteCount);
+		return candidateCopy;
 	}
 
 	/**
@@ -86,7 +100,7 @@ public class Candidate {
 	 * @return <code>String</code> containing <code>name</code> 
 	 */
 	public String getName() {
-		
+		return this.name;
 	}
 
 	/**
@@ -95,7 +109,7 @@ public class Candidate {
 	 * @return <code>String</code> containing <code>party</code> 
 	 */
 	public String getParty() {
-		
+		return this.party;
 	}
 
 	/**
@@ -104,7 +118,7 @@ public class Candidate {
 	 * @return <code>int</code> containing <code>voteCount</code> 
 	 */
 	public int getVoteCount() {
-		
+		return this.voteCount;
 	}
 
 	/**
@@ -113,14 +127,14 @@ public class Candidate {
 	 * @return <code>String</code> containing text version of <code>voteCount</code> 
 	 */
 	public String getVoteCountString() {
-		
+		return toString();
 	}
 
 	/**
 	 * Simple method to increment the vote count for the candidate
 	 */
 	public void incrementVoteCount() {
-		
+		voteCount++;
 	}
 
 	/*
