@@ -65,7 +65,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
-	
+		
 	}
 
 	/*
@@ -95,7 +95,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public int getFormalCount() {
-	
+		return formalCount;
 	}
 
 	/*
@@ -105,7 +105,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public int getInformalCount() {
-		
+		return informalCount;
 	}
 
 	
