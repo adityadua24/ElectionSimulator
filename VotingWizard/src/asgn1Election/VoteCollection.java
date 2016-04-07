@@ -27,7 +27,7 @@ import java.util.TreeMap;
  * @author hogan
  *
  */
-public class VoteCollection implements Collection {
+public class VoteCollection implements asgn1Election.Collection  {
 	/** Holds all the votes in this seat */
 	private ArrayList<Vote> voteList;
 
@@ -49,7 +49,12 @@ public class VoteCollection implements Collection {
 	 * @throws ElectionException if <code>NOT inRange(numCandidates)</code>
 	 */
 	public VoteCollection(int numCandidates) throws ElectionException {
-		
+		if(!(CandidateIndex.inRange(numCandidates))) {
+			throw new ElectionException("invalid candidate number passed to voteCollection Constructor");
+		}
+		else {
+				this.numCandidates = numCandidates;
+		}
 	}
 	
 	/* 

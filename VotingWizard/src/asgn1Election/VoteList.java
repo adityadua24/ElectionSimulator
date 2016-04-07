@@ -35,6 +35,7 @@ public class VoteList implements Vote {
 	 */
 	public VoteList(int numCandidates) {
 		
+			this.numCandidates = numCandidates;
 	}
 
 	/*
@@ -45,6 +46,9 @@ public class VoteList implements Vote {
 	@Override
 	public boolean addPref(int index) {
 		
+		vote.add(index);
+		return true;
+		
 	}
 
 	/*
@@ -54,8 +58,14 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public Vote copyVote() {
-		
-	}
+		VoteList copiedVote = new VoteList(this.numCandidates);
+		Iterator<Integer> itr = this.vote.iterator();
+		while(itr.hasNext()){
+		 copiedVote.vote.add((Integer) itr.next());
+		}
+		return copiedVote;
+			
+		}
 
 	/*
 	 * (non-Javadoc)
@@ -64,7 +74,13 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public CandidateIndex getPreference(int cand) {
-
+		Iterator<Integer> itr = this.vote.iterator();
+		while(itr.hasNext()) {
+			if(itr.equals((Integer) cand)) {
+				
+			}
+		}
+		return null;
 	}
 
 	/*
@@ -74,7 +90,7 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public Vote invertVote() {
-
+		
 	}
 
 	/* 
