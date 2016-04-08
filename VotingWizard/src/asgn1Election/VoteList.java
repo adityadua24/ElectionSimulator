@@ -34,7 +34,7 @@ public class VoteList implements Vote {
 	 * this seat. 
 	 */
 	public VoteList(int numCandidates) {
-		
+			this.vote = new ArrayList<Integer>();
 			this.numCandidates = numCandidates;
 	}
 
@@ -44,8 +44,7 @@ public class VoteList implements Vote {
 	 * @see asgn1Election.Vote#addPref(asgn1Election.CandidateIndex)
 	 */
 	@Override
-	public boolean addPref(int index) {
-		
+	public boolean addPref(int index) {	
 		vote.add(index);
 		return true;
 		
@@ -58,14 +57,14 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public Vote copyVote() {
-		VoteList copiedVote = new VoteList(this.numCandidates);
-		Iterator<Integer> itr = this.vote.iterator();
+		VoteList copiedVote = new VoteList(numCandidates);
+		Iterator<Integer> itr = iterator();
+		
 		while(itr.hasNext()){
-		 copiedVote.vote.add((Integer) itr.next());
-		}
-		return copiedVote;
-			
-		}
+			copiedVote.vote.add( (Integer) itr.next() );
+		}		
+		return copiedVote;			
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -74,13 +73,8 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public CandidateIndex getPreference(int cand) {
-		Iterator<Integer> itr = this.vote.iterator();
-		while(itr.hasNext()) {
-			if(itr.equals((Integer) cand)) {
-				
-			}
-		}
-		return null;
+		CandidateIndex cInd = new CandidateIndex((vote.indexOf((Integer) cand )+1));
+		return cInd;
 	}
 
 	/*
@@ -91,6 +85,13 @@ public class VoteList implements Vote {
 	@Override
 	public Vote invertVote() {
 		
+		VoteList vote_inverted = new VoteList(this.numCandidates);
+		
+		for(int i = 1; i <= this.vote.size(); i++) {
+			vote_inverted.vote.add((this.vote.indexOf((Integer) i)) + 1);
+		}
+		return vote_inverted;
+		
 	}
 
 	/* 
@@ -98,8 +99,10 @@ public class VoteList implements Vote {
 	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
+	
 	@Override
 	public Iterator<Integer> iterator() {
+		return vote.iterator();
 		
 	}
 
@@ -108,6 +111,7 @@ public class VoteList implements Vote {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+
 	@Override
 	public String toString() {
 		String str = "";
