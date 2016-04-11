@@ -7,6 +7,7 @@
 package asgn1Election;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -69,8 +70,9 @@ public class VoteCollection implements asgn1Election.Collection  {
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
 		for( Vote v: voteList) {
-			if(getPrimaryKey(v).equals(elim)) {
+			if((elim.compareTo(getPrimaryKey(v))) == 0) { 
 				(cds.get(getPrefthKey(v,cds, 2))).incrementVoteCount();
+				
 			}
 			else 
 				continue;
@@ -86,7 +88,10 @@ public class VoteCollection implements asgn1Election.Collection  {
 	@Override
 	public void countPrimaryVotes(TreeMap<CandidateIndex, Candidate> cds) {
 		for(Vote v: voteList) {
-			(cds.get(getPrimaryKey(v))).incrementVoteCount();
+			//(cds.get(getPrimaryKey(v))).incrementVoteCount();
+			CandidateIndex cdI_similar = this.getPrimaryKey(v);
+			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
+			(cds.get(cdI_actual)).incrementVoteCount();
 		}
 	}
 
@@ -129,8 +134,8 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void includeFormalVote(Vote v) {
-		voteList.add(v);
-		this.formalCount++;
+		this.voteList.add(v);
+		++this.formalCount;
 	}
 
 	/*
@@ -140,7 +145,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void updateInformalCount() {
-		informalCount++;
+		++this.informalCount;
 	}
 	
 	/**
@@ -164,8 +169,12 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	private CandidateIndex getPrefthKey(Vote v,TreeMap<CandidateIndex, Candidate> cds, int pref) {
 		while(pref <= this.numCandidates) {
-			if(cds.containsKey((v.getPreference(pref)))) {
-				return v.getPreference(pref);
+			CandidateIndex cdI_similar = v.getPreference(pref);
+			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
+			if(cds.containsKey(cdI_actual)) {
+			//if(cds.containsKey((v.getPreference(pref)))) {
+				//return v.getPreference(pref);
+				return cdI_actual;
 			}
 			else {
 				pref++;
@@ -186,4 +195,20 @@ public class VoteCollection implements asgn1Election.Collection  {
 	private CandidateIndex getPrimaryKey(Vote v) {
         return v.getPreference((Integer) 1);
     }
+	
+	/**
+	 * This method returns the reference of original object present in TreeMap cds and passes it to wherever needed
+	 * This enables it to fetch values off the cds
+	 * @param cds variable name of TreeMap data type
+	 * @param cdI CandidateIndex variable which is identical to one of the candidateIndexs in cds 
+	 * @return	returns the reference of original object 
+	 */
+	private CandidateIndex getOriginalObjectReference(TreeMap<CandidateIndex, Candidate> cds, CandidateIndex cdI) {
+		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
+			if((cdI.compareTo(entry.getKey())) == 0) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
 }

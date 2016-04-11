@@ -79,7 +79,7 @@ public class Candidate {
 		len = ElectionManager.FullPartyField - partyStr.length();
 		str += partyStr + Strings.createPadding(' ',len);
 		str += abbrevStr;
-		str += toString();
+		//str += toString();
 		return str;
 	}
 
@@ -90,8 +90,8 @@ public class Candidate {
 	 * @throws ElectionException - see {@link #Candidate(String,String,String,int)}. 
 	 */
 	public Candidate copy() throws ElectionException {
-		Candidate candidateCopy = new Candidate(this.name, this.party, this.abbrev, this.voteCount);
-		return candidateCopy;
+		return  
+		new Candidate(this.name, this.party, this.abbrev, this.voteCount);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class Candidate {
 	 * Simple method to increment the vote count for the candidate
 	 */
 	public void incrementVoteCount() {
-		voteCount++;
+		this.voteCount++;
 	}
 
 	/*

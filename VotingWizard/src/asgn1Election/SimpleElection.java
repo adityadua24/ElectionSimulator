@@ -28,7 +28,7 @@ public class SimpleElection extends Election {
 	 */
 	public SimpleElection(String name) {
 		super(name);
-		this.type = 0;
+		this.type = Election.SimpleVoting;
 	}
 
 	/*
@@ -39,7 +39,12 @@ public class SimpleElection extends Election {
 	@Override
 	public String findWinner() {
 		this.vc.countPrimaryVotes(cds);
-		return this.reportCountResult();		
+		Candidate winner = clearWinner(0);
+		String str =  "";
+		str += this.showResultHeader();
+		str += this.reportCountResult();
+		str += this.reportWinner(winner);
+		return str;
 	}
 
 	/* 
@@ -49,7 +54,8 @@ public class SimpleElection extends Election {
 	@Override
 	public boolean isFormal(Vote v) {
 		while(v.iterator().hasNext()) {
-			if((v.iterator().next() > this.numCandidates)) {
+			int x = v.iterator().next();
+			if(((x > this.numCandidates)) || ( x < 1)) {
 				return false;
 			}
 			else {
@@ -82,25 +88,27 @@ public class SimpleElection extends Election {
 	protected Candidate clearWinner(int wVotes) {
 		
 		Candidate potentialWinner = (cds.get(cds.firstKey()));	//gets first candidate
-		Candidate potentialWinner2 = null;
+		//Candidate potentialWinner2 = null;
+		//int potentialWinnerVotes = potentialWinner.getVoteCount();
 		int skipFirstIteration = 0;
 		for(Map.Entry<CandidateIndex , Candidate> entry : cds.entrySet()) {
 			if(skipFirstIteration == 0) {
-				skipFirstIteration++;
+				++skipFirstIteration;
 				continue;
 			}
 			Candidate cd = entry.getValue();
 			if((cd.getVoteCount()) > (potentialWinner.getVoteCount())) {
 				potentialWinner = cd;
 			}
-			else if((cd.getVoteCount()) == (potentialWinner.getVoteCount())) {
+			/*else if((cd.getVoteCount()) == (potentialWinner.getVoteCount())) {
 				potentialWinner2 = cd;
 			}
+			*/
 			else {
 				continue;
 			}
 		}
-		if(potentialWinner2 == null) {
+		/*if(potentialWinner2 == null) {
 			return potentialWinner;
 		}
 		else {
@@ -112,7 +120,8 @@ public class SimpleElection extends Election {
 				return potentialWinner2;
 			}
 		}
-		
+		*/
+		return potentialWinner;
 	}
 
 	/**

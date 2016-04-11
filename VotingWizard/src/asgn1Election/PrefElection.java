@@ -6,10 +6,10 @@
  */
 	package asgn1Election;
 
-	import java.util.BitSet;
+	//import java.util.BitSet;
 
 	import java.util.Map;
-import java.util.Map.Entry;
+//import java.util.Map.Entry;
 
 import asgn1Util.Strings;
 
@@ -31,7 +31,7 @@ public class PrefElection extends Election {
 	 */
 	public PrefElection(String name) {
 		super(name);
-		this.type = 1;
+		this.type = Election.PrefVoting;
 	}
 
 	/*
@@ -64,7 +64,8 @@ public class PrefElection extends Election {
 	public boolean isFormal(Vote v) {
 	
 			while(v.iterator().hasNext()) {
-				if((v.iterator().next() > this.numCandidates)) {
+				int x = v.iterator().next();
+				if(((x > this.numCandidates)) || ( x < 1)) {
 					return false;
 				}
 				else {
@@ -150,13 +151,12 @@ public class PrefElection extends Election {
 		int skipFirstIteration = 0;
 		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
 			if(skipFirstIteration == 0) {
-				skipFirstIteration++;
+				++skipFirstIteration;
 				continue;
 			}
 			Candidate cd = entry.getValue();
-			CandidateIndex cdI = entry.getKey();
 			if( cd.getVoteCount() < minVotes) {
-				elimCand = cdI;
+				elimCand = entry.getKey();
 			}
 			else {
 				continue;

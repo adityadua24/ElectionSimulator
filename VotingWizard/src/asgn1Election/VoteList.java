@@ -34,8 +34,9 @@ public class VoteList implements Vote {
 	 * this seat. 
 	 */
 	public VoteList(int numCandidates) {
-			this.vote = new ArrayList<Integer>();
-			this.numCandidates = numCandidates;
+			//Check function call flow, if numCandidates is checked thru VoteCollection before passing here, then no need to check Range on this again
+		this.vote = new ArrayList<Integer>();
+		this.numCandidates = numCandidates;
 	}
 
 	/*
@@ -61,8 +62,7 @@ public class VoteList implements Vote {
 	@Override
 	public Vote copyVote() {
 		VoteList copiedVote = new VoteList(numCandidates);
-		Iterator<Integer> itr = this.vote.iterator();
-		
+		Iterator<Integer> itr = this.iterator();
 		while(itr.hasNext()){
 			copiedVote.vote.add( (Integer) itr.next() );
 		}		
@@ -76,8 +76,8 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public CandidateIndex getPreference(int cand) {
-		CandidateIndex cInd = new CandidateIndex((vote.indexOf((Integer) cand )+1));
-		return cInd;
+		return  new CandidateIndex(((this.vote.indexOf((Integer) cand) ) +1));	
+		//Remember : Note to use +1 with getPreference calls !!
 	}
 
 	/*
@@ -87,11 +87,11 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public Vote invertVote() {
-		
+		// First element in this invertedVote is First preferred Candidate and last element is last most preferred candidate
 		VoteList vote_inverted = new VoteList(this.numCandidates);
 		
 		for(int i = 1; i <= this.vote.size(); i++) {
-			vote_inverted.vote.add((this.vote.indexOf((Integer) i)) + 1);
+			vote_inverted.vote.add(((this.vote.indexOf((Integer) i))) + 1);
 		}
 		return vote_inverted;	
 	}
