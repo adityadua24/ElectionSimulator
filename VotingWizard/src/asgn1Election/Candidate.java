@@ -79,7 +79,7 @@ public class Candidate {
 		len = ElectionManager.FullPartyField - partyStr.length();
 		str += partyStr + Strings.createPadding(' ',len);
 		str += abbrevStr;
-		//str += toString();
+		str += toString();
 		return str;
 	}
 

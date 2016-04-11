@@ -4,9 +4,9 @@
  * part of the assessment for CAB302, Semester 1, 2016. 
  * 
  */
-package asgn1Election;
+	package asgn1Election;
 
-import java.util.BitSet;
+	import java.util.BitSet;
 
 import asgn1Util.Strings;
 
@@ -27,7 +27,8 @@ public class PrefElection extends Election {
 	 * @param name <code>String</code> containing the Election name
 	 */
 	public PrefElection(String name) {
-		
+		super(name);
+		this.type = 1;
 	}
 
 	/*
@@ -47,6 +48,16 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	public boolean isFormal(Vote v) {
+	
+			while(v.iterator().hasNext()) {
+				if((v.iterator().next() > this.numCandidates)) {
+					return false;
+				}
+				else {
+					continue;
+				}
+			}
+		return true;
 		
 	}
 
@@ -71,7 +82,7 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	protected Candidate clearWinner(int winVotes) {
-
+		
 	}
 
 	/**
@@ -114,6 +125,6 @@ public class PrefElection extends Election {
 	 * @return <code>CandidateIndex</code> of candidate with fewest votes
 	 */
 	private CandidateIndex selectLowestCandidate() {
-
+		
 	}
 }

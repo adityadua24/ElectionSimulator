@@ -6,7 +6,8 @@
  */
 package asgn1Election;
 
-import java.util.Collection;
+//import java.util.Collection;
+import java.util.Map;
 
 import asgn1Util.Strings;
 
@@ -26,7 +27,8 @@ public class SimpleElection extends Election {
 	 * @param name <code>String</code> containing the Election name
 	 */
 	public SimpleElection(String name) {
-
+		super(name);
+		this.type = 0;
 	}
 
 	/*
@@ -36,7 +38,8 @@ public class SimpleElection extends Election {
 	 */
 	@Override
 	public String findWinner() {
-		
+		this.vc.countPrimaryVotes(cds);
+		return this.reportCountResult();		
 	}
 
 	/* 
@@ -45,8 +48,17 @@ public class SimpleElection extends Election {
 	 */
 	@Override
 	public boolean isFormal(Vote v) {
-		
+		while(v.iterator().hasNext()) {
+			if((v.iterator().next() > this.numCandidates)) {
+				return false;
+			}
+			else {
+				continue;
+			}
+		}
+		return true;
 	}
+		
 
 	/*
 	 * (non-Javadoc)
@@ -68,6 +80,38 @@ public class SimpleElection extends Election {
 	 */
 	@Override
 	protected Candidate clearWinner(int wVotes) {
+		
+		Candidate potentialWinner = (cds.get(cds.firstKey()));	//gets first candidate
+		Candidate potentialWinner2 = null;
+		int skipFirstIteration = 0;
+		for(Map.Entry<CandidateIndex , Candidate> entry : cds.entrySet()) {
+			if(skipFirstIteration == 0) {
+				skipFirstIteration++;
+				continue;
+			}
+			Candidate cd = entry.getValue();
+			if((cd.getVoteCount()) > (potentialWinner.getVoteCount())) {
+				potentialWinner = cd;
+			}
+			else if((cd.getVoteCount()) == (potentialWinner.getVoteCount())) {
+				potentialWinner2 = cd;
+			}
+			else {
+				continue;
+			}
+		}
+		if(potentialWinner2 == null) {
+			return potentialWinner;
+		}
+		else {
+			int random = (int) ( Math.random() * 10);
+			if( (random % 2) == 1 ) {
+					return potentialWinner;
+			}
+			else {
+				return potentialWinner2;
+			}
+		}
 		
 	}
 

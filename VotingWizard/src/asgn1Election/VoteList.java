@@ -45,9 +45,12 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public boolean addPref(int index) {	
-		vote.add(index);
-		return true;
-		
+		if(vote.size() < numCandidates) {
+			vote.add(index);
+			return true;
+		}
+		else 
+			return false;
 	}
 
 	/*
@@ -58,7 +61,7 @@ public class VoteList implements Vote {
 	@Override
 	public Vote copyVote() {
 		VoteList copiedVote = new VoteList(numCandidates);
-		Iterator<Integer> itr = iterator();
+		Iterator<Integer> itr = this.vote.iterator();
 		
 		while(itr.hasNext()){
 			copiedVote.vote.add( (Integer) itr.next() );
@@ -90,8 +93,7 @@ public class VoteList implements Vote {
 		for(int i = 1; i <= this.vote.size(); i++) {
 			vote_inverted.vote.add((this.vote.indexOf((Integer) i)) + 1);
 		}
-		return vote_inverted;
-		
+		return vote_inverted;	
 	}
 
 	/* 
@@ -102,7 +104,7 @@ public class VoteList implements Vote {
 	
 	@Override
 	public Iterator<Integer> iterator() {
-		return vote.iterator();
+		return this.vote.iterator();
 		
 	}
 
@@ -119,5 +121,9 @@ public class VoteList implements Vote {
 			str += index.intValue() + " ";
 		}
 		return str;
+	}
+	
+	public int get_numOfCandidates() {
+		return this.numCandidates;
 	}
 }

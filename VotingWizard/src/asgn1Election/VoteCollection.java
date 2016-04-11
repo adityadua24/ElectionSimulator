@@ -54,6 +54,9 @@ public class VoteCollection implements asgn1Election.Collection  {
 		}
 		else {
 				this.numCandidates = numCandidates;
+				this.voteList = new ArrayList<Vote>();
+				this.formalCount = 0;
+				this.informalCount = 0;
 		}
 	}
 	
@@ -65,7 +68,14 @@ public class VoteCollection implements asgn1Election.Collection  {
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
-		
+		for( Vote v: voteList) {
+			if(getPrimaryKey(v).equals(elim)) {
+				(cds.get(getPrefthKey(v,cds, 2))).incrementVoteCount();
+			}
+			else 
+				continue;
+		}
+		cds.remove(elim);
 	}
 
 	/*
@@ -75,8 +85,11 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void countPrimaryVotes(TreeMap<CandidateIndex, Candidate> cds) {
-		
+		for(Vote v: voteList) {
+			(cds.get(getPrimaryKey(v))).incrementVoteCount();
+		}
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -85,7 +98,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void emptyTheCollection() {
-		
+		voteList.clear();
 	}
 
 	/*
@@ -116,7 +129,8 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void includeFormalVote(Vote v) {
-	
+		voteList.add(v);
+		this.formalCount++;
 	}
 
 	/*
@@ -126,7 +140,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public void updateInformalCount() {
-		
+		informalCount++;
 	}
 	
 	/**
@@ -149,7 +163,16 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 * 
 	 */
 	private CandidateIndex getPrefthKey(Vote v,TreeMap<CandidateIndex, Candidate> cds, int pref) {
-
+		while(pref <= this.numCandidates) {
+			if(cds.containsKey((v.getPreference(pref)))) {
+				return v.getPreference(pref);
+			}
+			else {
+				pref++;
+				continue;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -161,6 +184,6 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 * @return <code>CandidateIndex</code> of the first preference candidate
 	 */
 	private CandidateIndex getPrimaryKey(Vote v) {
-        
+        return v.getPreference((Integer) 1);
     }
 }
