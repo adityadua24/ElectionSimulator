@@ -6,10 +6,11 @@
  */
 	package asgn1Election;
 
-	//import java.util.BitSet;
-
-	import java.util.Map;
-//import java.util.Map.Entry;
+	import java.util.BitSet;
+import java.util.Iterator;
+import java.util.Map;
+	import java.util.Map.Entry;
+	import java.util.Iterator;
 
 import asgn1Util.Strings;
 
@@ -62,9 +63,9 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	public boolean isFormal(Vote v) {
-	
-			while(v.iterator().hasNext()) {
-				int x = v.iterator().next();
+			Iterator<Integer> itr = v.iterator();
+			while(itr.hasNext()) {
+				int x = itr.next();
 				if(((x > this.numCandidates)) || ( x < 1)) {
 					return false;
 				}
