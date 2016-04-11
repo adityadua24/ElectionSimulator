@@ -27,7 +27,7 @@ import java.util.TreeMap;
  * @author hogan
  *
  */
-public class VoteCollection implements Collection {
+public class VoteCollection implements asgn1Election.Collection  {
 	/** Holds all the votes in this seat */
 	private ArrayList<Vote> voteList;
 
@@ -49,7 +49,15 @@ public class VoteCollection implements Collection {
 	 * @throws ElectionException if <code>NOT inRange(numCandidates)</code>
 	 */
 	public VoteCollection(int numCandidates) throws ElectionException {
-		
+		if(!(CandidateIndex.inRange(numCandidates))) {
+			throw new ElectionException("invalid candidate number passed to voteCollection Constructor");
+		}
+		else {
+				this.numCandidates = numCandidates;
+				this.voteList = new ArrayList<Vote>();
+				this.formalCount = 0;
+				this.informalCount = 0;
+		}
 	}
 	
 	/* 
@@ -60,7 +68,14 @@ public class VoteCollection implements Collection {
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
-	
+		for( Vote v: voteList) {
+			if(getPrimaryKey(v).equals(elim)) {
+				(cds.get(getPrefthKey(v,cds, 2))).incrementVoteCount();
+			}
+			else 
+				continue;
+		}
+		cds.remove(elim);
 	}
 
 	/*
@@ -70,8 +85,11 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public void countPrimaryVotes(TreeMap<CandidateIndex, Candidate> cds) {
-		
+		for(Vote v: voteList) {
+			(cds.get(getPrimaryKey(v))).incrementVoteCount();
+		}
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -80,7 +98,7 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public void emptyTheCollection() {
-		
+		voteList.clear();
 	}
 
 	/*
@@ -90,7 +108,7 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public int getFormalCount() {
-	
+		return formalCount;
 	}
 
 	/*
@@ -100,7 +118,7 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public int getInformalCount() {
-		
+		return informalCount;
 	}
 
 	
@@ -111,7 +129,8 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public void includeFormalVote(Vote v) {
-	
+		voteList.add(v);
+		this.formalCount++;
 	}
 
 	/*
@@ -121,7 +140,7 @@ public class VoteCollection implements Collection {
 	 */
 	@Override
 	public void updateInformalCount() {
-		
+		informalCount++;
 	}
 	
 	/**
@@ -144,7 +163,16 @@ public class VoteCollection implements Collection {
 	 * 
 	 */
 	private CandidateIndex getPrefthKey(Vote v,TreeMap<CandidateIndex, Candidate> cds, int pref) {
-
+		while(pref <= this.numCandidates) {
+			if(cds.containsKey((v.getPreference(pref)))) {
+				return v.getPreference(pref);
+			}
+			else {
+				pref++;
+				continue;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -156,6 +184,6 @@ public class VoteCollection implements Collection {
 	 * @return <code>CandidateIndex</code> of the first preference candidate
 	 */
 	private CandidateIndex getPrimaryKey(Vote v) {
-        
+        return v.getPreference((Integer) 1);
     }
 }

@@ -4,9 +4,12 @@
  * part of the assessment for CAB302, Semester 1, 2016. 
  * 
  */
-package asgn1Election;
+	package asgn1Election;
 
-import java.util.BitSet;
+	import java.util.BitSet;
+
+	import java.util.Map;
+import java.util.Map.Entry;
 
 import asgn1Util.Strings;
 
@@ -27,7 +30,8 @@ public class PrefElection extends Election {
 	 * @param name <code>String</code> containing the Election name
 	 */
 	public PrefElection(String name) {
-		
+		super(name);
+		this.type = 1;
 	}
 
 	/*
@@ -37,7 +41,18 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	public String findWinner() {
-		
+		int winVotes = this.vc.getFormalCount() / 2;
+		this.vc.countPrimaryVotes(cds);
+		String str = "" + this.reportCountStatus();
+		while( (this.clearWinner(winVotes)) == null) {
+			CandidateIndex elim = this.selectLowestCandidate();
+			Candidate elimCand = cds.get(elim);
+			str = str + "\n" + this.prefDistMessage(elimCand);
+			this.vc.countPrefVotes(cds, elim);
+		}
+		Candidate winner = this.clearWinner(winVotes);
+		str = str + "\n\n" + this.reportWinner(winner); 
+		return str;
 	}
 
 	/* 
@@ -47,6 +62,17 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	public boolean isFormal(Vote v) {
+	
+			while(v.iterator().hasNext()) {
+				if((v.iterator().next() > this.numCandidates)) {
+					return false;
+				}
+				else {
+					continue;
+				}
+			}
+			//check if source of this function call updates formal count of votes or not.
+		return true;
 		
 	}
 
@@ -71,7 +97,12 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	protected Candidate clearWinner(int winVotes) {
-
+		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
+			if(((entry.getValue()).getVoteCount()) > winVotes) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -114,6 +145,23 @@ public class PrefElection extends Election {
 	 * @return <code>CandidateIndex</code> of candidate with fewest votes
 	 */
 	private CandidateIndex selectLowestCandidate() {
-
+		int minVotes = (cds.get(cds.firstKey())).getVoteCount();
+		CandidateIndex elimCand = cds.firstKey();
+		int skipFirstIteration = 0;
+		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
+			if(skipFirstIteration == 0) {
+				skipFirstIteration++;
+				continue;
+			}
+			Candidate cd = entry.getValue();
+			CandidateIndex cdI = entry.getKey();
+			if( cd.getVoteCount() < minVotes) {
+				elimCand = cdI;
+			}
+			else {
+				continue;
+			}
+		}
+		return elimCand;
 	}
 }
