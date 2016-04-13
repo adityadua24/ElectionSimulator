@@ -44,12 +44,15 @@ public class PrefElection extends Election {
 	public String findWinner() {
 		int winVotes = this.vc.getFormalCount() / 2;
 		this.vc.countPrimaryVotes(cds);
-		String str = "" + this.reportCountStatus();
+		String str = "";
+		str += this.showResultHeader();
+		str +=this.reportCountStatus();
 		while( (this.clearWinner(winVotes)) == null) {
 			CandidateIndex elim = this.selectLowestCandidate();
 			Candidate elimCand = cds.get(elim);
 			str = str + "\n" + this.prefDistMessage(elimCand);
 			this.vc.countPrefVotes(cds, elim);
+			str += "\n" + this.reportCountStatus();
 		}
 		Candidate winner = this.clearWinner(winVotes);
 		str = str + "\n\n" + this.reportWinner(winner); 
@@ -99,6 +102,7 @@ public class PrefElection extends Election {
 	 */
 	@Override
 	protected Candidate clearWinner(int winVotes) {
+		
 		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
 			if(((entry.getValue()).getVoteCount()) > winVotes) {
 				return entry.getValue();
@@ -147,8 +151,10 @@ public class PrefElection extends Election {
 	 * @return <code>CandidateIndex</code> of candidate with fewest votes
 	 */
 	private CandidateIndex selectLowestCandidate() {
-		int minVotes = (cds.get(cds.firstKey())).getVoteCount();
-		CandidateIndex elimCand = cds.firstKey();
+		CandidateIndex elimCandIndex = cds.firstKey();
+		Candidate elimCand = cds.get(elimCandIndex);
+		Candidate elimCand2 = null;
+		CandidateIndex elimCand2Index = null;
 		int skipFirstIteration = 0;
 		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
 			if(skipFirstIteration == 0) {
@@ -156,13 +162,50 @@ public class PrefElection extends Election {
 				continue;
 			}
 			Candidate cd = entry.getValue();
-			if( cd.getVoteCount() < minVotes) {
-				elimCand = entry.getKey();
+			if( cd.getVoteCount() < elimCand.getVoteCount()) {
+				elimCand = entry.getValue();
+				elimCandIndex = entry.getKey();
+			}
+			/*
+			 * 
+			 * 
+			 */
+			else if(cd.getVoteCount() == elimCand.getVoteCount()) {
+				elimCand2 = elimCand;
+				elimCand = entry.getValue();
+				elimCandIndex = entry.getKey();
 			}
 			else {
 				continue;
 			}
 		}
-		return elimCand;
+		if(elimCand2 == null) 
+			return elimCandIndex;
+		/*
+		 * 
+		 * 
+		 * 
+		 */
+		else if(!(elimCand2 == null)) {
+			for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
+				if(elimCand2.equals(entry.getValue())) {
+					elimCand2Index = entry.getKey();
+				}
+			}
+			if(elimCand.getVoteCount() < elimCand2.getVoteCount()){
+				return elimCandIndex;
+			}
+			else if(elimCand.getVoteCount() == elimCand2.getVoteCount()){
+				int random = (int) ( Math.random() * 10);
+				if( (random % 2) == 1 ) {
+						return elimCandIndex;
+				}
+				else {
+					return elimCand2Index;
+				}
+			}
+		}
+		return elimCandIndex;
 	}
 }
+//private Candidate itsATie

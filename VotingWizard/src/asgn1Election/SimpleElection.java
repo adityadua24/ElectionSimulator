@@ -90,8 +90,7 @@ public class SimpleElection extends Election {
 	protected Candidate clearWinner(int wVotes) {
 		
 		Candidate potentialWinner = (cds.get(cds.firstKey()));	//gets first candidate
-		//Candidate potentialWinner2 = null;
-		//int potentialWinnerVotes = potentialWinner.getVoteCount();
+		Candidate potentialWinner2 = null;
 		int skipFirstIteration = 0;
 		for(Map.Entry<CandidateIndex , Candidate> entry : cds.entrySet()) {
 			if(skipFirstIteration == 0) {
@@ -102,15 +101,15 @@ public class SimpleElection extends Election {
 			if((cd.getVoteCount()) > (potentialWinner.getVoteCount())) {
 				potentialWinner = cd;
 			}
-			/*else if((cd.getVoteCount()) == (potentialWinner.getVoteCount())) {
+			else if((cd.getVoteCount()) == (potentialWinner.getVoteCount())) {
 				potentialWinner2 = cd;
 			}
-			*/
+			
 			else {
 				continue;
 			}
 		}
-		/*if(potentialWinner2 == null) {
+		if(potentialWinner2 == null) {
 			return potentialWinner;
 		}
 		else {
@@ -122,8 +121,6 @@ public class SimpleElection extends Election {
 				return potentialWinner2;
 			}
 		}
-		*/
-		return potentialWinner;
 	}
 
 	/**

@@ -7,6 +7,7 @@
 package asgn1Election;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -70,14 +71,54 @@ public class VoteCollection implements asgn1Election.Collection  {
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
 		for( Vote v: voteList) {
-			if((elim.compareTo(getPrimaryKey(v))) == 0) { 
+			/*if((elim.compareTo(getPrimaryKey(v))) == 0) { 
+				
 				(cds.get(getPrefthKey(v,cds, 2))).incrementVoteCount();
 				
 			}
 			else 
 				continue;
 		}
+		*/
+			Vote invertedV = v.invertVote();
+			Iterator<Integer> itr  = invertedV.iterator();
+			while(itr.hasNext()) {
+				int x = itr.next();
+				CandidateIndex cdX = new CandidateIndex(x);
+				boolean isActive = true;
+				if(this.getOriginalObjectReference(cds, cdX) == null) {
+					isActive = false;
+				}
+				else {
+					cdX = this.getOriginalObjectReference(cds, cdX);
+				}
+				/*
+				 * 
+				 *	
+				 */
+				if( isActive && ((cdX.compareTo(elim)) != 0)){
+					break;
+				}
+				else if(!isActive) {
+					continue;
+				}
+				else if(isActive && ((cdX.compareTo(elim)) == 0)){
+					/*int y = itr.next();
+					CandidateIndex cdI = new CandidateIndex(y);
+					CandidateIndex cdI_actual = getOriginalObjectReference(cds, cdI);
+					(cds.get(cdI_actual)).incrementVoteCount();
+					break;
+					*/
+					int pref = (invertedV.getPreference(x)).getValue();
+					++pref;
+					CandidateIndex cdI = getPrefthKey(v, cds, pref);
+					(cds.get(cdI)).incrementVoteCount();
+					break;
+				}
+			}
+		}
 		cds.remove(elim);
+		
 	}
 
 	/*
@@ -113,7 +154,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	 */
 	@Override
 	public int getFormalCount() {
-		return formalCount;
+		return this.formalCount;
 	}
 
 	/*
@@ -171,9 +212,11 @@ public class VoteCollection implements asgn1Election.Collection  {
 		while(pref <= this.numCandidates) {
 			CandidateIndex cdI_similar = v.getPreference(pref);
 			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
-			if(cds.containsKey(cdI_actual)) {
-			//if(cds.containsKey((v.getPreference(pref)))) {
-				//return v.getPreference(pref);
+			if(cdI_actual == null) {
+				pref++;
+				continue;
+			}
+			else if(cds.containsKey(cdI_actual)) {
 				return cdI_actual;
 			}
 			else {
