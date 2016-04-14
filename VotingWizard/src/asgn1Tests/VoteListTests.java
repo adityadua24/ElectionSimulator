@@ -4,29 +4,35 @@
 package asgn1Tests;
 
 import static org.junit.Assert.*;
-
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Eddy
  *
- */
+ **/
 public class VoteListTests {
-
-	/**
-	 * Test method for {@link asgn1Election.VoteList#VoteList(int)}.
-	 */
-	@Test
-	public void testVoteList() {
-		fail("Not yet implemented");
+	
+	private asgn1Election.VoteList vtList;
+	
+	@Before @Test
+	public void steUp() {
+		vtList = new asgn1Election.VoteList(5);
 	}
-
+	
 	/**
 	 * Test method for {@link asgn1Election.VoteList#addPref(int)}.
 	 */
 	@Test
-	public void testAddPref() {
-		fail("Not yet implemented");
+	public void testAddPrefOverFlow() {
+		assertFalse(vtList.addPref(7));
+	}
+	/**
+	 * Test method for {@link asgn1Election.VoteList#addPref(int)}.
+	 */
+	@Test
+	public void testAddPrefUnderflow() {
+		assertFalse(vtList.addPref(-1));
 	}
 
 	/**

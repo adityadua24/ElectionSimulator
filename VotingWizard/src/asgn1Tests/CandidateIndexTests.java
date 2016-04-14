@@ -64,12 +64,12 @@ public class CandidateIndexTests {
 	@Test
 	public void testCompareToSame() {
 		asgn1Election.CandidateIndex testCandIndex2 = new asgn1Election.CandidateIndex(5);
-		assertEquals(0, testCandIndex2.compareTo(testCandIndex));
+		assertEquals(0, (testCandIndex2.toString()).compareTo((testCandIndex).toString()));
 	}
 	@Test
 	public void testCompareToDifferentHigher() {
 		asgn1Election.CandidateIndex testCandIndex2 = new asgn1Election.CandidateIndex(7);
-		assertEquals(1, testCandIndex2.compareTo(testCandIndex));
+		assertEquals(1, (testCandIndex2.compareTo(testCandIndex)));
 	}
 	@Test
 	public void testCompareToDifferentLower() {

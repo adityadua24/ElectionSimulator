@@ -17,7 +17,8 @@ public class CandidateTests {
 	
 	private asgn1Election.Candidate testCand;
 	
-	@Before @Test public void setUp() throws asgn1Election.ElectionException{
+	@Before @Test
+	public void setUp() throws asgn1Election.ElectionException{
 		testCand = new asgn1Election.Candidate("Test Name", "Test party", "Test Abbrev", 0);
 	}
 	
@@ -40,25 +41,8 @@ public class CandidateTests {
 	}
 	@Test(expected = asgn1Election.ElectionException.class)
 	public void testCandidateConstructorNegativeVoteCount() throws ElectionException {
-		testCand = new asgn1Election.Candidate("", "Party", "Abbrev", -1);
+		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", -1);
 	}
-
-	/**
-	 * Test method for {@link asgn1Election.Candidate#candidateListing()}.
-	 * @throws ElectionException 
-	 */
-	@Test
-	public void testCandidateListing() throws ElectionException {
-		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 1);
-		String str = testCand.candidateListing();
-		String strTestWith = "Name              Party          (Abbrev)";
-	//	assertTrue(str.equals(strTestWith));
-		
-		assertTrue(str.compareTo(strTestWith)==0);
-		
-		
-		
-		}
 
 	/**
 	 * Test method for {@link asgn1Election.Candidate#copy()}.
@@ -68,7 +52,7 @@ public class CandidateTests {
 	public void testCopy() throws ElectionException {
 		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 1);
 		asgn1Election.Candidate testCandCopy = testCand.copy();
-		assertTrue((testCand.toString()).equals(testCandCopy.toString()));
+		assertEquals(0, (testCand.candidateListing()).compareTo(testCandCopy.candidateListing()));
 	}
 
 	/**
@@ -79,8 +63,9 @@ public class CandidateTests {
 	public void testGetVoteCountString() throws ElectionException {
 		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 1);
 		String str = testCand.getVoteCountString();
-		String strTestWith = "1";
-		assertTrue(str.equals(strTestWith));
+		char strTestWith = '1';
+		char str2 = str.charAt(29);
+		assertEquals(strTestWith, str2);
 	}
 
 	/**
@@ -91,8 +76,9 @@ public class CandidateTests {
 	public void testToString() throws ElectionException {
 		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 1);
 		String str = testCand.toString();
-		String strTestWith = "1";
-		assertTrue(str.equals(strTestWith));		
+		char testChar = str.charAt(29);
+		char testWith = '1';
+		assertEquals(testChar, testWith);		
 	}
 	@Test 
 	public void testIncrementCount() throws ElectionException {
