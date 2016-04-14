@@ -52,7 +52,12 @@ public class CandidateTests {
 		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 1);
 		String str = testCand.candidateListing();
 		String strTestWith = "Name              Party          (Abbrev)";
-		assertTrue(str.equals(strTestWith));
+	//	assertTrue(str.equals(strTestWith));
+		
+		assertTrue(str.compareTo(strTestWith)==0);
+		
+		
+		
 		}
 
 	/**
@@ -89,5 +94,10 @@ public class CandidateTests {
 		String strTestWith = "1";
 		assertTrue(str.equals(strTestWith));		
 	}
-
+	@Test 
+	public void testIncrementCount() throws ElectionException {
+		testCand = new asgn1Election.Candidate("Name", "Party", "Abbrev", 0);
+		testCand.incrementVoteCount();
+		assertTrue(testCand.getVoteCount() == 1);
+	}
 }

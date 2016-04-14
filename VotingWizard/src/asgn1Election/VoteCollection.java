@@ -109,7 +109,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 					(cds.get(cdI_actual)).incrementVoteCount();
 					break;
 					*/
-					int pref = (invertedV.getPreference(x)).getValue();
+					int pref = Integer.parseInt((invertedV.getPreference(x)).toString());
 					++pref;
 					CandidateIndex cdI = getPrefthKey(v, cds, pref);
 					(cds.get(cdI)).incrementVoteCount();

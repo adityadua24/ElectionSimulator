@@ -93,7 +93,4 @@ public class CandidateIndex implements Comparable<CandidateIndex> {
 	public String toString() {
 		return "" + this.value;
 	}
-	public int getValue() {
-		return value;
-	} 
 }
