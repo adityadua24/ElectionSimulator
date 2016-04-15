@@ -76,7 +76,12 @@ public class VoteList implements Vote {
 	 */
 	@Override
 	public CandidateIndex getPreference(int cand) {
-		return  new CandidateIndex(((this.vote.indexOf((Integer) cand) ) +1));	
+		if((cand > 0) && (cand<=this.numCandidates)) {
+			return  new CandidateIndex(((this.vote.indexOf((Integer) cand) ) +1));
+		}
+		else {
+			return null;
+		}
 		//Remember : Note to use +1 with getPreference calls !!
 	}
 
@@ -121,9 +126,5 @@ public class VoteList implements Vote {
 			str += index.intValue() + " ";
 		}
 		return str;
-	}
-	
-	public int get_numOfCandidates() {
-		return this.numCandidates;
 	}
 }

@@ -4,6 +4,9 @@
 package asgn1Tests;
 
 import static org.junit.Assert.*;
+
+import java.util.Iterator;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,30 +28,39 @@ public class VoteListTests {
 	 */
 	@Test
 	public void testAddPrefOverFlow() {
+		vtList.addPref(1);
+		vtList.addPref(1);
+		vtList.addPref(1);
+		vtList.addPref(1);
+		vtList.addPref(1);
 		assertFalse(vtList.addPref(7));
 	}
-	/**
-	 * Test method for {@link asgn1Election.VoteList#addPref(int)}.
-	 */
-	@Test
-	public void testAddPrefUnderflow() {
-		assertFalse(vtList.addPref(-1));
+	@Test 
+	public void testAddPref() {
+		assertTrue(vtList.addPref(1));		
 	}
-
 	/**
 	 * Test method for {@link asgn1Election.VoteList#copyVote()}.
 	 */
 	@Test
 	public void testCopyVote() {
-		fail("Not yet implemented");
-	}
+		vtList.addPref(2);
+		vtList.addPref(1);
+		vtList.addPref(3);
+		vtList.addPref(4);
+		vtList.addPref(5);
+		asgn1Election.Vote testCopy = vtList.copyVote();
+		assertEquals(0, vtList.toString().compareTo(testCopy.toString()));
+		}
 
 	/**
 	 * Test method for {@link asgn1Election.VoteList#getPreference(int)}.
 	 */
 	@Test
 	public void testGetPreference() {
-		fail("Not yet implemented");
+		vtList.addPref(2);
+		asgn1Election.CandidateIndex cdI = vtList.getPreference(2);
+		assertEquals(0, cdI.toString().compareTo("1"));
 	}
 
 	/**
@@ -56,7 +68,15 @@ public class VoteListTests {
 	 */
 	@Test
 	public void testInvertVote() {
-		fail("Not yet implemented");
+		vtList.addPref(2);
+		vtList.addPref(1);
+		vtList.addPref(3);
+		vtList.addPref(4);
+		vtList.addPref(5);
+		asgn1Election.Vote testInvert = vtList.invertVote();
+		String str = testInvert.toString();
+		String strTestWith = "2 1 3 4 5 ";
+		assertEquals(0, str.compareTo(strTestWith));
 	}
 
 	/**
@@ -64,7 +84,8 @@ public class VoteListTests {
 	 */
 	@Test
 	public void testIterator() {
-		fail("Not yet implemented");
+		Iterator<Integer> itr = vtList.iterator();
+		assertTrue(itr != null);
 	}
 
 	/**
@@ -72,15 +93,13 @@ public class VoteListTests {
 	 */
 	@Test
 	public void testToString() {
-		fail("Not yet implemented");
+		vtList.addPref(2);
+		vtList.addPref(1);
+		vtList.addPref(3);
+		vtList.addPref(4);
+		vtList.addPref(5);
+		String str = vtList.toString();
+		String strTestWith = "2 1 3 4 5 ";
+		assertEquals(0, str.compareTo(strTestWith));
 	}
-
-	/**
-	 * Test method for {@link asgn1Election.VoteList#get_numOfCandidates()}.
-	 */
-	@Test
-	public void testGet_numOfCandidates() {
-		fail("Not yet implemented");
-	}
-
 }

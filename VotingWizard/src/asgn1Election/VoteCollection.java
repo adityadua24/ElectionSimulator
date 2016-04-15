@@ -103,12 +103,6 @@ public class VoteCollection implements asgn1Election.Collection  {
 					continue;
 				}
 				else if(isActive && ((cdX.compareTo(elim)) == 0)){
-					/*int y = itr.next();
-					CandidateIndex cdI = new CandidateIndex(y);
-					CandidateIndex cdI_actual = getOriginalObjectReference(cds, cdI);
-					(cds.get(cdI_actual)).incrementVoteCount();
-					break;
-					*/
 					int pref = Integer.parseInt((invertedV.getPreference(x)).toString());
 					++pref;
 					CandidateIndex cdI = getPrefthKey(v, cds, pref);
