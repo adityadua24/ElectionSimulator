@@ -4,31 +4,15 @@
 package asgn1Tests;
 
 import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import asgn1Election.Collection;
 import asgn1Election.Election;
-import asgn1Election.ElectionException;
 import asgn1Election.ElectionManager;
 import asgn1Election.PrefElection;
-import asgn1Election.VoteCollection;
-import asgn1Util.NumbersException;
-
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
 /**
@@ -86,8 +70,25 @@ public class PrefElectionTests {
 	 * Test method for {@link asgn1Election.PrefElection#isFormal(asgn1Election.Vote)}.
 	 */
 	@Test
-	public void testIsFormal() {
-		fail("Not yet implemented");
+	public void testIsFormalValidData() {
+		asgn1Election.Vote v1 = new asgn1Election.VoteList(5);
+		v1.addPref(1); v1.addPref(2); v1.addPref(3); v1.addPref(4); v1.addPref(5);
+		boolean isFormal = em.getElection().isFormal(v1);
+		assertTrue(isFormal);
+	}
+	@Test
+	public void testIsFormalInValidData() {
+		asgn1Election.Vote v1 = new asgn1Election.VoteList(5);
+		v1.addPref(1); v1.addPref(2); v1.addPref(3); v1.addPref(6); v1.addPref(5);
+		boolean isFormal = em.getElection().isFormal(v1);
+		assertFalse(isFormal);
+	}
+	@Test
+	public void testIsFormalDuplicatePrefrence() {
+		asgn1Election.Vote v1 = new asgn1Election.VoteList(5);
+		v1.addPref(1); v1.addPref(2); v1.addPref(1); v1.addPref(4); v1.addPref(5);
+		boolean isFormal = em.getElection().isFormal(v1);
+		assertFalse(isFormal);
 	}
 	/**
 	 * Test method for {@link asgn1Election.PrefElection#PrefElection(java.lang.String)}.
@@ -115,12 +116,40 @@ public class PrefElectionTests {
 	
 	@Test
 	public void testloadVotes() throws Exception, SecurityException {
-		Class c = em.getElection().getClass();
+		@SuppressWarnings("rawtypes")
+		Class c = Election.class;
 		Field f = c.getDeclaredField("vc");
 		f.setAccessible(true);
 		Collection vcTest = (Collection) f.get(em.getElection());
 		int total = vcTest.getFormalCount() + vcTest.getInformalCount();
 		assertEquals(30, total);
+	}
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void testLoadDefs() throws NoSuchFieldException, Exception {
+		Class c1 = Election.class;
+		Class c2 = Election.class;
+		Class c3 = Election.class;
+		
+		Field f1 = c1.getDeclaredField("name");
+		Field f2 = c2.getDeclaredField("enrolment");
+		Field f3 = c3.getDeclaredField("numCandidates");
+		
+		f1.setAccessible(true);
+		String nameE = (String) f1.get(em.getElection());
+		
+		
+		f2.setAccessible(true);
+		int enrolment = (int) f2.get(em.getElection());
+		
+		
+		f3.setAccessible(true);
+		int candidateCount = (int) f3.get(em.getElection());
+		
+		assertEquals(0, nameE.compareTo("MorgulVale"));
+		assertEquals(enrolment, 83483);
+		assertEquals(candidateCount, 5);
+		
 	}
 }
 	

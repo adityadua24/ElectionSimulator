@@ -76,7 +76,6 @@ public class SimpleElectionTests {
 		testWith = testWith.replace("\n", "").replace("\r", "").replace(" ", "").trim();
 		String testWith2 = testWith.replace("\n", "").replace("\r", "").replace(" ", "").trim();
 		
-		
 		assertEquals(0, test.compareTo(testWith2));
 	}
 

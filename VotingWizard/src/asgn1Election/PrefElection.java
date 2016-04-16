@@ -6,9 +6,8 @@
  */
 	package asgn1Election;
 
-	import java.util.BitSet;
-import java.util.Iterator;
-import java.util.Map;
+	import java.util.Iterator;
+	import java.util.Map;
 	import java.util.Map.Entry;
 	import java.util.Iterator;
 
@@ -51,7 +50,7 @@ public class PrefElection extends Election {
 		while( (this.clearWinner(winVotes)) == null) {
 			CandidateIndex elim = this.selectLowestCandidate();
 			Candidate elimCand = cds.get(elim);
-			str += this.prefDistMessage(elimCand);
+			str += this.prefDistMessage(elimCand) +"\n";
 			this.vc.countPrefVotes(cds, elim);
 			str += this.reportCountStatus();
 		}
@@ -70,6 +69,16 @@ public class PrefElection extends Election {
 			Iterator<Integer> itr = v.iterator();
 			while(itr.hasNext()) {
 				int x = itr.next();
+				Iterator<Integer> itr2 = v.iterator();
+				int repeat = 0;
+				while(itr2.hasNext()) {
+					if(itr2.next()== x) {
+						++repeat;
+					}
+				}
+				if(repeat > 1) {
+					return false;
+				}
 				if(((x > this.numCandidates)) || ( x < 1)) {
 					return false;
 				}
@@ -77,8 +86,7 @@ public class PrefElection extends Election {
 					continue;
 				}
 			}
-			//check if source of this function call updates formal count of votes or not.
-		return true;
+			return true;
 		
 	}
 
