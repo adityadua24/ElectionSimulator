@@ -41,8 +41,8 @@ public class SimpleElection extends Election {
 	public String findWinner() {
 		this.vc.countPrimaryVotes(cds);
 		Candidate winner = clearWinner(0);
-		String str =  "";
-		str += this.showResultHeader();
+		String str = this.showResultHeader();
+		str += "" + "Counting primary votes; " + this.numCandidates + " alternatives available \n";
 		str += this.reportCountResult();
 		str += this.reportWinner(winner);
 		return str;
@@ -67,7 +67,6 @@ public class SimpleElection extends Election {
 		return true;
 	}
 		
-
 	/*
 	 * (non-Javadoc)
 	 * 

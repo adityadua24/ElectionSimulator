@@ -123,7 +123,6 @@ public class VoteCollection implements asgn1Election.Collection  {
 	@Override
 	public void countPrimaryVotes(TreeMap<CandidateIndex, Candidate> cds) {
 		for(Vote v: voteList) {
-			//(cds.get(getPrimaryKey(v))).incrementVoteCount();
 			CandidateIndex cdI_similar = this.getPrimaryKey(v);
 			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
 			(cds.get(cdI_actual)).incrementVoteCount();

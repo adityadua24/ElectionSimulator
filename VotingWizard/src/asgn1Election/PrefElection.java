@@ -46,16 +46,17 @@ public class PrefElection extends Election {
 		this.vc.countPrimaryVotes(cds);
 		String str = "";
 		str += this.showResultHeader();
+		str += "" + "Counting primary votes; " + this.numCandidates + " alternatives available \n";
 		str +=this.reportCountStatus();
 		while( (this.clearWinner(winVotes)) == null) {
 			CandidateIndex elim = this.selectLowestCandidate();
 			Candidate elimCand = cds.get(elim);
-			str = str + "\n" + this.prefDistMessage(elimCand);
+			str += this.prefDistMessage(elimCand);
 			this.vc.countPrefVotes(cds, elim);
-			str += "\n" + this.reportCountStatus();
+			str += this.reportCountStatus();
 		}
 		Candidate winner = this.clearWinner(winVotes);
-		str = str + "\n\n" + this.reportWinner(winner); 
+		str = str + this.reportWinner(winner); 
 		return str;
 	}
 
