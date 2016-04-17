@@ -5,10 +5,13 @@ package asgn1Tests;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import asgn1Election.VoteList;
 
 /**
  * @author Eddy
@@ -21,6 +24,26 @@ public class VoteListTests {
 	@Before @Test
 	public void steUp() {
 		vtList = new asgn1Election.VoteList(5);
+	}
+	
+	@Test
+	public void testVotelist() throws Exception, Exception {
+		@SuppressWarnings("rawtypes")
+		Class c = VoteList.class;
+		Field f = c.getDeclaredField("numCandidates");
+		f.setAccessible(true);
+		int candidateCount = (int) f.get(vtList);
+		assertEquals(5, candidateCount);
+	}
+	@Test
+	public void testVoteListVoteInitialisation() throws NoSuchFieldException, Exception {
+		@SuppressWarnings("rawtypes")
+		Class c = VoteList.class;
+		Field f = c.getDeclaredField("vote");
+		f.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		ArrayList<Integer> voteTest = (ArrayList<Integer>) f.get(vtList);
+		assertFalse(voteTest == null);
 	}
 	
 	/**
@@ -52,6 +75,11 @@ public class VoteListTests {
 		asgn1Election.Vote testCopy = vtList.copyVote();
 		assertEquals(0, vtList.toString().compareTo(testCopy.toString()));
 		}
+	@Test
+	public void testCopyVoteEmptyVote() {
+		asgn1Election.Vote testCopy = vtList.copyVote();
+		assertEquals(0, vtList.toString().compareTo(testCopy.toString()));
+	}
 
 	/**
 	 * Test method for {@link asgn1Election.VoteList#getPreference(int)}.
@@ -61,6 +89,22 @@ public class VoteListTests {
 		vtList.addPref(2);
 		asgn1Election.CandidateIndex cdI = vtList.getPreference(2);
 		assertEquals(0, cdI.toString().compareTo("1"));
+	}
+	@Test
+	public void testGetPreferenceInvalidDataOverFlow() {
+		vtList.addPref(2);
+		asgn1Election.CandidateIndex cdI = vtList.getPreference(6);
+		assertNull(cdI);
+	}
+	@Test
+	public void testGetPreferenceInvalidDataZero() {
+		asgn1Election.CandidateIndex cdI = vtList.getPreference(0);
+		assertNull(cdI);
+	}
+	@Test
+	public void testGetPreferenceInvalidDataFive() {
+		asgn1Election.CandidateIndex cdI = vtList.getPreference(5);
+		assertNull(cdI);
 	}
 
 	/**
@@ -76,6 +120,13 @@ public class VoteListTests {
 		asgn1Election.Vote testInvert = vtList.invertVote();
 		String str = testInvert.toString();
 		String strTestWith = "2 1 3 4 5 ";
+		assertEquals(0, str.compareTo(strTestWith));
+	}
+	@Test
+	public void testInvertVoteNoData() {
+		asgn1Election.Vote testInvert = vtList.invertVote();
+		String str = testInvert.toString();
+		String strTestWith = vtList.toString();
 		assertEquals(0, str.compareTo(strTestWith));
 	}
 
@@ -101,5 +152,11 @@ public class VoteListTests {
 		String str = vtList.toString();
 		String strTestWith = "2 1 3 4 5 ";
 		assertEquals(0, str.compareTo(strTestWith));
+	}
+	@Test 
+	public void testToStringEmptyVote() {
+		String str = vtList.toString();
+		String strtestWith = "";
+		assertEquals(0, str.compareTo(strtestWith));
 	}
 }

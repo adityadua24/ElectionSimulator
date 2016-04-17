@@ -6,6 +6,7 @@
  */
 package asgn1Election;
 
+
 import java.util.Iterator;
 //import java.util.Collection;
 import java.util.Map;
@@ -21,6 +22,7 @@ import asgn1Util.Strings;
  */
 public class SimpleElection extends Election {
 
+	
 	/**
 	 * Simple Constructor for <code>SimpleElection</code>, takes name and also sets the 
 	 * election type internally. 
@@ -32,9 +34,9 @@ public class SimpleElection extends Election {
 		this.type = Election.SimpleVoting;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Finds winner based on primary vote counts
+	 * Builds a string reporting vote counts and winner
 	 * @see asgn1Election.Election#findWinner()
 	 */
 	@Override
@@ -48,8 +50,10 @@ public class SimpleElection extends Election {
 		return str;
 	}
 
-	/* 
-	 * (non-Javadoc)
+	
+	/* @param v Vote
+	 * Checks formality of a vote
+	 * returns true if formal, false if not
 	 * @see asgn1Election.Election#isFormal(asgn1Election.Vote)
 	 */
 	@Override
@@ -67,9 +71,8 @@ public class SimpleElection extends Election {
 		return true;
 	}
 		
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Returns string containing name and type of election 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -78,11 +81,13 @@ public class SimpleElection extends Election {
 		return str;
 	}
 	
+	
 	// Protected and Private/helper methods below///
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* @param wVotes - insignificant parameter in current context
+	 * Method finds a candidate with maximum number of votes
+	 *  If two candidates have same max votes
+	 *  Picks one random and returns it
 	 * @see asgn1Election.Election#clearWinner(int)
 	 */
 	@Override
@@ -122,6 +127,7 @@ public class SimpleElection extends Election {
 		}
 	}
 
+	
 	/**
 	 * Helper method to create a string reporting the count result
 	 * 

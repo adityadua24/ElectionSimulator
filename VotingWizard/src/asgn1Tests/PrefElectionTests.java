@@ -124,6 +124,7 @@ public class PrefElectionTests {
 		int total = vcTest.getFormalCount() + vcTest.getInformalCount();
 		assertEquals(30, total);
 	}
+	
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testLoadDefs() throws NoSuchFieldException, Exception {

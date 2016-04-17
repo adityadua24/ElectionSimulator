@@ -6,6 +6,7 @@
  */
 package asgn1Election;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.TreeMap;
  *
  */
 public class VoteCollection implements asgn1Election.Collection  {
+	
 	/** Holds all the votes in this seat */
 	private ArrayList<Vote> voteList;
 
@@ -42,6 +44,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	/** Number of invalid votes received during the election */
 	private int informalCount;
 
+	
 	/**
 	 * Simple Constructor for the <code>VoteCollection</code> class.
 	 * Most information added through mutator methods. 
@@ -62,24 +65,16 @@ public class VoteCollection implements asgn1Election.Collection  {
 		}
 	}
 	
-	/* 
-	 * (non-Javadoc)
-	 * 
+	
+	/* Distributes votes of elim to next active candidate and removes elim from cds
+	 * @param elim - The candidate index index whose votes are to be distributed.
+	 * @param cds - Treemap storing all candidate indexes and candidates
 	 * @see asgn1Election.Collection#countPrefVotes(java.util.TreeMap, asgn1Election.CandidateIndex)
 	 */
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
 		for( Vote v: voteList) {
-			/*if((elim.compareTo(getPrimaryKey(v))) == 0) { 
-				
-				(cds.get(getPrefthKey(v,cds, 2))).incrementVoteCount();
-				
-			}
-			else 
-				continue;
-		}
-		*/
 			Vote invertedV = v.invertVote();
 			Iterator<Integer> itr  = invertedV.iterator();
 			while(itr.hasNext()) {
@@ -92,16 +87,14 @@ public class VoteCollection implements asgn1Election.Collection  {
 				else {
 					cdX = this.getOriginalObjectReference(cds, cdX);
 				}
-				/*
-				 * 
-				 *	
-				 */
+				//Checks whether current CandidateIndex in inverted vote is active and equals elim 
 				if( isActive && ((cdX.compareTo(elim)) != 0)){
 					break;
 				}
 				else if(!isActive) {
 					continue;
 				}
+				//When found active and equal to elim, distributes vote to next active candidate
 				else if(isActive && ((cdX.compareTo(elim)) == 0)){
 					int pref = Integer.parseInt((invertedV.getPreference(x)).toString());
 					++pref;
@@ -112,12 +105,11 @@ public class VoteCollection implements asgn1Election.Collection  {
 			}
 		}
 		cds.remove(elim);
-		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* @param cds - Treemap storing all candidate indexes and candidates 
+	 * Counts primary votes of all the candidates in a vote
 	 * @see asgn1Election.Collection#countPrimaryVotes(java.util.TreeMap)
 	 */
 	@Override
@@ -130,9 +122,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* Simple method to empty a treemap 
 	 * @see asgn1Election.Collection#emptyTheVoteList()
 	 */
 	@Override
@@ -140,9 +130,8 @@ public class VoteCollection implements asgn1Election.Collection  {
 		voteList.clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Getter method to get formal vote count in a vote collection
 	 * @see asgn1Election.Collection#getFormalCount()
 	 */
 	@Override
@@ -151,8 +140,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
+	Getter method to get formal vote count in a vote collection
 	 * @see asgn1Election.Collection#getInformalCount()
 	 */
 	@Override
@@ -161,9 +149,9 @@ public class VoteCollection implements asgn1Election.Collection  {
 	}
 
 	
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* @param v - vote whose formality needs to be tested 
+	 * Checks formality of v
+	 * increments formal vote count
 	 * @see asgn1Election.Collection#includeFormalVote(asgn1Election.Vote)
 	 */
 	@Override
@@ -172,15 +160,15 @@ public class VoteCollection implements asgn1Election.Collection  {
 		++this.formalCount;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Simple method to increment informal vote count
 	 * @see asgn1Election.Collection#updateInformalCount()
 	 */
 	@Override
 	public void updateInformalCount() {
 		++this.informalCount;
 	}
+	
 	
 	/**
 	 * 
@@ -220,6 +208,7 @@ public class VoteCollection implements asgn1Election.Collection  {
 		return null;
 	}
 
+	
 	/**
 	 * <p>Important helper method to find the first choice candidate in the current 
 	 * vote. This is always undertaken prior to distribution of preferences and so it 

@@ -43,8 +43,8 @@ public class CandidateIndex implements Comparable<CandidateIndex> {
 		this.value = index;
 	}
 
-	/* 
-	 * (non-Javadoc)
+	/* @other CandidateIndex
+	 * Compares values of current candidate index instance with instance other
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
@@ -59,6 +59,7 @@ public class CandidateIndex implements Comparable<CandidateIndex> {
 		}
 	}
 
+	
 	/**
      * Simple method to create a deep copy of the candidate index
 	 * 
@@ -84,9 +85,7 @@ public class CandidateIndex implements Comparable<CandidateIndex> {
 		this.value = newValue;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* Returns String containing CandidateIndex value 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

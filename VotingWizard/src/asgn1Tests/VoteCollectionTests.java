@@ -5,6 +5,11 @@ package asgn1Tests;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.junit.Before;
@@ -12,7 +17,12 @@ import org.junit.Test;
 
 import asgn1Election.Candidate;
 import asgn1Election.CandidateIndex;
+import asgn1Election.Collection;
+import asgn1Election.Election;
 import asgn1Election.ElectionException;
+import asgn1Election.ElectionManager;
+import asgn1Election.Vote;
+import asgn1Election.VoteCollection;
 
 /**
  * @author Eddy
@@ -20,31 +30,25 @@ import asgn1Election.ElectionException;
  */
 public class VoteCollectionTests {
 
-	private asgn1Election.VoteCollection vc;
-	private TreeMap<CandidateIndex, Candidate> cds;
-	private asgn1Election.CandidateIndex cdI1, cdI2, cdI3, cdI4, cdI5;
-	private asgn1Election.Candidate cd1, cd2, cd3, cd4, cd5;
-	
+	private VoteCollection vc;
+	private ElectionManager em;
+	private ArrayList<Election> elec;
 	
 	@Before @Test 
 	public void setUp() throws ElectionException {
-		vc = new asgn1Election.VoteCollection(4);			
-		cds = new TreeMap<CandidateIndex, Candidate>();
-		cd1 = new asgn1Election.Candidate("Name1", "Party", "abbrev", 0);
-		cd2 = new asgn1Election.Candidate("Name2", "Party", "abbrev", 0);
-		cd3 = new asgn1Election.Candidate("Name3", "Party", "abbrev", 0);
-		cd4 = new asgn1Election.Candidate("Name4", "Party", "abbrev", 0);
-		cd5 = new asgn1Election.Candidate("Name5", "Party", "abbrev", 0);
-		cdI1 = new asgn1Election.CandidateIndex(1);
-		cdI2 = new asgn1Election.CandidateIndex(2);
-		cdI3 = new asgn1Election.CandidateIndex(3);
-		cdI4 = new asgn1Election.CandidateIndex(4);
-		cdI5 = new asgn1Election.CandidateIndex(5);
-		cds.put(cdI1, cd1);
-		cds.put(cdI2, cd2);
-		cds.put(cdI3, cd3);
-		cds.put(cdI4, cd4);
-		cds.put(cdI5, cd5);		
+		vc = new VoteCollection(5);
+		try {
+			/* Main Processing Loop */
+			em = new ElectionManager();
+			String strAddress = ".//data//PrefElectionsTests.lst";
+			em.getElectionsFromFile(strAddress);
+
+			elec = em.getElectionList();
+			em.setElection(elec.get(2));
+		}catch (Exception e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 	/**
@@ -69,121 +73,151 @@ public class VoteCollectionTests {
 		}
 	}
 	@Test 
-	public void testVoteCollectionValidInitalisation() throws ElectionException {
-		vc = new asgn1Election.VoteCollection(4);
+	public void testVoteCollectionValidInitalisation() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException  {
+		
 		assertEquals(0, vc.getFormalCount());
 		assertEquals(0, vc.getInformalCount());
+		
+		@SuppressWarnings("rawtypes")
+		Class c = VoteCollection.class;
+		Field f = c.getDeclaredField("numCandidates");
+		f.setAccessible(true);
+		int numCandidates = (Integer) f.get(vc);
+		assertEquals(numCandidates, 5);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test 
+	public void testVoteCollectionValidInitalisationVoteList() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException  {
+		
+		@SuppressWarnings("rawtypes")
+		Class c2 = VoteCollection.class;
+		Field f2 = c2.getDeclaredField("voteList");
+		f2.setAccessible(true);
+		ArrayList<Vote> voteListTest; 
+		voteListTest = (ArrayList<Vote>) f2.get(vc);
+		assertFalse(voteListTest == null);
 		
 	}
 
 	/**
 	 * Test method for {@link asgn1Election.VoteCollection#countPrefVotes(java.util.TreeMap, asgn1Election.CandidateIndex)}.
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
 	 */
+	@SuppressWarnings({"unused" , "rawtypes", "unchecked" })
 	@Test
-	public void testCountPrefVotes() {
-		asgn1Election.VoteList v1 = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v2 = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v3 = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v4 = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v5 = new asgn1Election.VoteList(5);
-		v1.addPref(5); v1.addPref(1); v1.addPref(4); v1.addPref(3); v1.addPref(2);
-		v2.addPref(2); v2.addPref(3); v2.addPref(1); v2.addPref(5); v2.addPref(4);
-		v3.addPref(1); v3.addPref(4); v3.addPref(3); v3.addPref(5); v3.addPref(2);
-		v4.addPref(3); v4.addPref(2); v4.addPref(1); v4.addPref(5); v4.addPref(4);
-		v5.addPref(4); v5.addPref(5); v5.addPref(1); v5.addPref(2); v5.addPref(3);
-		vc.includeFormalVote(v1);
-		vc.includeFormalVote(v2);
-		vc.includeFormalVote(v3);
-		vc.includeFormalVote(v4);
-		vc.includeFormalVote(v5);
-		vc.countPrimaryVotes(cds);
-		vc.countPrefVotes(cds, cdI3);
-		vc.countPrefVotes(cds, cdI4);
-		int i1 = cds.get(cdI1).getVoteCount();
-		int i2 = cds.get(cdI2).getVoteCount();
-		Candidate c3 = cds.get(cdI3);
-		Candidate c4 = cds.get(cdI4);
-		int i5 = cds.get(cdI5).getVoteCount();
-		assertEquals(2, i1);
-		assertEquals(2, i2);
-		assertTrue(c3 == null);
-		assertTrue(c4 == null);
-		assertEquals(1, i5);
+	public void testCountPrefVotes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		
+		String str = em.manageCount();
+		
+		Class c = Election.class;
+		Field f2 = c.getDeclaredField("vc");
+		f2.setAccessible(true);
+		Collection vcCopy = (Collection) f2.get(em.getElection());
+		int formalVotes = vcCopy.getFormalCount();
+		int winVotes = formalVotes/2;
+		
+		
+		Class c4 = (em.getElection()).getClass();
+		
+		
+		Method m = c4.getDeclaredMethod("clearWinner", int.class);
+		m.setAccessible(true);
+		
+		Candidate cdWinner = (Candidate) m.invoke(em.getElection(), winVotes );
+		int votes = cdWinner.getVoteCount();
+		assertEquals(16, votes);
 	}
-
+	
 	/**
 	 * Test method for {@link asgn1Election.VoteCollection#countPrimaryVotes(java.util.TreeMap)}.
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
-	public void testCountPrimaryVotes() {
-		asgn1Election.VoteList v = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v2 = new asgn1Election.VoteList(5);
-		v.addPref(5); v.addPref(1); v.addPref(4); v.addPref(3); v.addPref(2);
-		v2.addPref(2); v2.addPref(3); v2.addPref(1); v2.addPref(5); v2.addPref(4);
-		vc.includeFormalVote(v);
-		vc.includeFormalVote(v2);
-		vc.countPrimaryVotes(cds);
+	public void testCountPrimaryVotes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	
+		Class c2 = Election.class;
 		
-		int i1 = cds.get(cdI1).getVoteCount();
-		int i2 = cds.get(cdI2).getVoteCount();
-		int i3 = cds.get(cdI3).getVoteCount();
-		int i4 = cds.get(cdI4).getVoteCount();
-		int i5 = cds.get(cdI5).getVoteCount();
+		Field f = c2.getDeclaredField("cds");
+		f.setAccessible(true);
 		
-		assertEquals(0, i1);
-		assertEquals(1, i2);
-		assertEquals(1, i3);
-		assertEquals(0, i4);
-		assertEquals(0, i5);
+		TreeMap<CandidateIndex, Candidate> cdsCopy = (TreeMap<CandidateIndex, Candidate>) f.get(em.getElection());
+		
+		Class c = Election.class;
+		Field f2 = c.getDeclaredField("vc");
+		f2.setAccessible(true);
+		Collection vcCopy = (Collection) f2.get(em.getElection());
+		vcCopy.countPrimaryVotes(cdsCopy);
+		
+		String str = "";
+		
+		for(Map.Entry<CandidateIndex, Candidate> entry: cdsCopy.entrySet()) {
+			str += entry.getValue().toString();
+		}
+		str = str.replace("\n", "").replace("\r", "").replace(" ", "").trim();
+		String testWith = "Shelob (MSP)                 9Gorbag (FOP)                 5Shagrat (SOP)                4Black Rider (NP)             9Mouth of Sauron (WSSP)       3";
+	    testWith = testWith.replace("\n", "").replace("\r", "").replace(" ", "").trim();
+
+		
+	    assertEquals(0, str.compareTo(testWith));
+		
 	}
 	/**
 	 * Test method for {@link asgn1Election.VoteCollection#emptyTheCollection()}.
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
-	public void testEmptyTheCollection() {
-		asgn1Election.VoteList v = new asgn1Election.VoteList(5);
-		asgn1Election.VoteList v2 = new asgn1Election.VoteList(5);
-		v.addPref(5); v.addPref(1); v.addPref(4); v.addPref(3); v.addPref(2);
-		v2.addPref(2); v2.addPref(3); v2.addPref(1); v2.addPref(5); v2.addPref(4);
-		vc.includeFormalVote(v);
-		vc.includeFormalVote(v2);
-		vc.countPrimaryVotes(cds);
+	public void testEmptyTheCollection() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
-		int i1 = cds.get(cdI2).getVoteCount();
-		int i2 = cds.get(cdI3).getVoteCount();
+		Class c = Election.class;
+		Field f2 = c.getDeclaredField("vc");
+		f2.setAccessible(true);
+		Collection vcCopy = (Collection) f2.get(em.getElection());
 		
-		assertEquals(1, i1);
-		assertEquals(1, i2);
+		vcCopy.emptyTheCollection();
 		
-		vc.emptyTheCollection();
-		vc.countPrimaryVotes(cds);
+		Class c2 = VoteCollection.class;
+		Field f = c2.getDeclaredField("voteList");
+		f.setAccessible(true);
+		ArrayList<Vote> votesCopy = (ArrayList<Vote>) f.get(vcCopy);
 		
-		int i3 = cds.get(cdI2).getVoteCount();
-		int i4 = cds.get(cdI3).getVoteCount();
-		
-		assertEquals(1, i3);
-		assertEquals(1, i4);
+		assertTrue(votesCopy.isEmpty());
 		
 	}
 
 	/**
 	 * Test method for {@link asgn1Election.VoteCollection#includeFormalVote(asgn1Election.Vote)}.
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
 	 */
 	@Test
-	public void testIncludeFormalVote() {
+	public void testIncludeFormalVote() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		asgn1Election.VoteList v = new asgn1Election.VoteList(5);
 		asgn1Election.VoteList v2 = new asgn1Election.VoteList(5);
 		v.addPref(5); v.addPref(1); v.addPref(4); v.addPref(3); v.addPref(2);
 		v2.addPref(2); v2.addPref(3); v2.addPref(1); v2.addPref(5); v2.addPref(4);
 		vc.includeFormalVote(v);
 		vc.includeFormalVote(v2);
-		vc.countPrimaryVotes(cds);
 		
-		int i1 = cds.get(cdI2).getVoteCount();
-		int i2 = cds.get(cdI3).getVoteCount();
+		assertEquals(2, vc.getFormalCount());
 		
-		assertEquals(1, i1);
-		assertEquals(1, i2);
 	}
 
 	/**

@@ -62,6 +62,7 @@ public class Candidate {
 		}	
 	}
 
+	
 	/**
 	 * Display method to show candidate name, full party and party acronym.
 	 * Note this representation does not include <code>voteCount</code>.  
@@ -79,7 +80,6 @@ public class Candidate {
 		len = ElectionManager.FullPartyField - partyStr.length();
 		str += partyStr + Strings.createPadding(' ',len);
 		str += abbrevStr;
-		//str += toString();
 		return str;
 	}
 
@@ -103,6 +103,7 @@ public class Candidate {
 		return this.name;
 	}
 
+	
 	/**
 	 * Simple Getter to return the full party name field
 	 * 
@@ -130,6 +131,7 @@ public class Candidate {
 		return toString();
 	}
 
+	
 	/**
 	 * Simple method to increment the vote count for the candidate
 	 */
@@ -137,9 +139,8 @@ public class Candidate {
 		this.voteCount++;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Returns a string containing: name abbrev and vote count of a Candidate 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
