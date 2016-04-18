@@ -6,8 +6,12 @@
  */
 package asgn1Election;
 
+
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
+import static org.junit.Assert.*;
 
 /**
  * 
@@ -27,7 +31,8 @@ import java.util.TreeMap;
  * @author hogan
  *
  */
-public class VoteCollection implements Collection {
+public class VoteCollection implements asgn1Election.Collection  {
+	
 	/** Holds all the votes in this seat */
 	private ArrayList<Vote> voteList;
 
@@ -40,6 +45,7 @@ public class VoteCollection implements Collection {
 	/** Number of invalid votes received during the election */
 	private int informalCount;
 
+	
 	/**
 	 * Simple Constructor for the <code>VoteCollection</code> class.
 	 * Most information added through mutator methods. 
@@ -49,80 +55,123 @@ public class VoteCollection implements Collection {
 	 * @throws ElectionException if <code>NOT inRange(numCandidates)</code>
 	 */
 	public VoteCollection(int numCandidates) throws ElectionException {
-		
+		if(!(CandidateIndex.inRange(numCandidates))) {
+			throw new ElectionException("invalid candidate number passed to voteCollection Constructor");
+		}
+		else {
+				this.numCandidates = numCandidates;
+				this.voteList = new ArrayList<Vote>();
+				this.formalCount = 0;
+				this.informalCount = 0;
+		}
 	}
 	
-	/* 
-	 * (non-Javadoc)
-	 * 
+	
+	/* Distributes votes of elim to next active candidate and removes elim from cds
+	 * @param elim - The candidate index index whose votes are to be distributed.
+	 * @param cds - Treemap storing all candidate indexes and candidates
 	 * @see asgn1Election.Collection#countPrefVotes(java.util.TreeMap, asgn1Election.CandidateIndex)
 	 */
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
-	
+		assertNotNull(cds);
+		assertNotNull(elim);
+		for( Vote v: voteList) {
+			Vote invertedV = v.invertVote();
+			Iterator<Integer> itr  = invertedV.iterator();
+			while(itr.hasNext()) {
+				int x = itr.next();
+				CandidateIndex cdX = new CandidateIndex(x);
+				boolean isActive = true;
+				if(this.getOriginalObjectReference(cds, cdX) == null) {
+					isActive = false;
+				}
+				else {
+					cdX = this.getOriginalObjectReference(cds, cdX);
+				}
+				//Checks whether current CandidateIndex in inverted vote is active and equals elim 
+				if( isActive && ((cdX.compareTo(elim)) != 0)){
+					break;
+				}
+				else if(!isActive) {
+					continue;
+				}
+				//When found active and equal to elim, distributes vote to next active candidate
+				else if(isActive && ((cdX.compareTo(elim)) == 0)){
+					int pref = Integer.parseInt((invertedV.getPreference(x)).toString());
+					++pref;
+					CandidateIndex cdI = getPrefthKey(v, cds, pref);
+					(cds.get(cdI)).incrementVoteCount();
+					break;
+				}
+			}
+		}
+		cds.remove(elim);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* @param cds - Treemap storing all candidate indexes and candidates 
+	 * Counts primary votes of all the candidates in a vote
 	 * @see asgn1Election.Collection#countPrimaryVotes(java.util.TreeMap)
 	 */
 	@Override
 	public void countPrimaryVotes(TreeMap<CandidateIndex, Candidate> cds) {
-		
+		for(Vote v: voteList) {
+			CandidateIndex cdI_similar = this.getPrimaryKey(v);
+			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
+			(cds.get(cdI_actual)).incrementVoteCount();
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+
+	/* Simple method to empty a treemap 
 	 * @see asgn1Election.Collection#emptyTheVoteList()
 	 */
 	@Override
 	public void emptyTheCollection() {
-		
+		voteList.clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Getter method to get formal vote count in a vote collection
 	 * @see asgn1Election.Collection#getFormalCount()
 	 */
 	@Override
 	public int getFormalCount() {
-	
+		return this.formalCount;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
+	Getter method to get formal vote count in a vote collection
 	 * @see asgn1Election.Collection#getInformalCount()
 	 */
 	@Override
 	public int getInformalCount() {
-		
+		return informalCount;
 	}
 
 	
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* @param v - vote whose formality needs to be tested 
+	 * Checks formality of v
+	 * increments formal vote count
 	 * @see asgn1Election.Collection#includeFormalVote(asgn1Election.Vote)
 	 */
 	@Override
 	public void includeFormalVote(Vote v) {
-	
+		this.voteList.add(v);
+		++this.formalCount;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* Simple method to increment informal vote count
 	 * @see asgn1Election.Collection#updateInformalCount()
 	 */
 	@Override
 	public void updateInformalCount() {
-		
+		++this.informalCount;
 	}
+	
 	
 	/**
 	 * 
@@ -144,9 +193,25 @@ public class VoteCollection implements Collection {
 	 * 
 	 */
 	private CandidateIndex getPrefthKey(Vote v,TreeMap<CandidateIndex, Candidate> cds, int pref) {
-
+		while(pref <= this.numCandidates) {
+			CandidateIndex cdI_similar = v.getPreference(pref);
+			CandidateIndex cdI_actual = this.getOriginalObjectReference(cds, cdI_similar);
+			if(cdI_actual == null) {
+				pref++;
+				continue;
+			}
+			else if(cds.containsKey(cdI_actual)) {
+				return cdI_actual;
+			}
+			else {
+				pref++;
+				continue;
+			}
+		}
+		return null;
 	}
 
+	
 	/**
 	 * <p>Important helper method to find the first choice candidate in the current 
 	 * vote. This is always undertaken prior to distribution of preferences and so it 
@@ -156,6 +221,22 @@ public class VoteCollection implements Collection {
 	 * @return <code>CandidateIndex</code> of the first preference candidate
 	 */
 	private CandidateIndex getPrimaryKey(Vote v) {
-        
+        return v.getPreference((Integer) 1);
     }
+	
+	/**
+	 * This method returns the reference of original object present in TreeMap cds and passes it to wherever needed
+	 * This enables it to fetch values off the cds
+	 * @param cds variable name of TreeMap data type
+	 * @param cdI CandidateIndex variable which is identical to one of the candidateIndexs in cds 
+	 * @return	returns the reference of original object 
+	 */
+	private CandidateIndex getOriginalObjectReference(TreeMap<CandidateIndex, Candidate> cds, CandidateIndex cdI) {
+		for(Map.Entry<CandidateIndex, Candidate> entry : cds.entrySet()) {
+			if((cdI.compareTo(entry.getKey())) == 0) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
 }

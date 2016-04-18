@@ -1,0 +1,65 @@
+Results for election: MorgulVale
+Enrolment: 83483
+
+Shelob              Monster Spider Party          (MSP)
+Gorbag              Filthy Orc Party              (FOP)
+Shagrat             Stinking Orc Party            (SOP)
+Black Rider         Nazgul Party                  (NP)
+Mouth of Sauron     Whatever Sauron Says Party    (WSSP)
+
+
+Counting primary votes; 5 alternatives available
+
+Preferential election: MorgulVale
+
+Shelob (MSP)                 9
+Gorbag (FOP)                 5
+Shagrat (SOP)                4
+Black Rider (NP)             9
+Mouth of Sauron (WSSP)       3
+
+Informal                     0
+
+Votes Cast                  30
+
+
+Preferences required: distributing Mouth of Sauron: 3 votes
+
+Preferential election: MorgulVale
+
+Shelob (MSP)                 9
+Gorbag (FOP)                 5
+Shagrat (SOP)                6
+Black Rider (NP)            10
+
+Informal                     0
+
+Votes Cast                  30
+
+
+Preferences required: distributing Gorbag: 5 votes
+
+Preferential election: MorgulVale
+
+Shelob (MSP)                12
+Shagrat (SOP)                7
+Black Rider (NP)            11
+
+Informal                     0
+
+Votes Cast                  30
+
+
+Preferences required: distributing Shagrat: 7 votes
+
+Preferential election: MorgulVale
+
+Shelob (MSP)                14
+Black Rider (NP)            16
+
+Informal                     0
+
+Votes Cast                  30
+
+
+Candidate Black Rider (Nazgul Party) is the winner with 16 votes...
