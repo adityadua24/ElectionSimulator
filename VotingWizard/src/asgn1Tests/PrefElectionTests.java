@@ -8,8 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 import asgn1Election.Collection;
 import asgn1Election.Election;
+import asgn1Election.ElectionException;
 import asgn1Election.ElectionManager;
 import asgn1Election.PrefElection;
+import asgn1Util.NumbersException;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,7 +36,7 @@ public class PrefElectionTests {
 		try {
 			/* Main Processing Loop */
 			em = new ElectionManager();
-			String strAddress = ".//data//PrefElectionsTests.lst";
+			String strAddress = ".//data//elections.lst";
 			em.getElectionsFromFile(strAddress);
 
 			elec = em.getElectionList();
@@ -48,7 +52,7 @@ public class PrefElectionTests {
 	 * @throws IOException 
 	 */
 	@Test
-	public void testFindWinner() throws IOException {
+	public void testFindWinner() {
 		String test = "Results for election: MorgulValeEnrolment: 83483Shelob              Monster Spider Party          (MSP)Gorbag              Filthy Orc Party              (FOP)Shagrat             Stinking Orc Party            (SOP)Black Rider         Nazgul Party                  (NP)Mouth of Sauron     Whatever Sauron Says Party    "
 				+ "(WSSP)Counting primary votes; 5 alternatives availablePreferential election: MorgulValeShelob (MSP)                 9Gorbag (FOP)                 5Shagrat (SOP)                4Black Rider (NP)             9Mouth of Sauron (WSSP)       "
 				+ "3Informal                     0Votes Cast                  30Preferences required: distributing Mouth of Sauron: 3 votesPreferential election: MorgulValeShelob (MSP)                 9Gorbag (FOP)                 5Shagrat (SOP)                6Black Rider (NP)            10Informal                     0Votes Cast                  "
@@ -113,28 +117,27 @@ public class PrefElectionTests {
 		String strExpected = "testingPrefElection - Preferential Voting";
 		assertEquals(0, str.compareTo(strExpected));
 	}
-	
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testloadVotes() throws Exception, SecurityException {
-		@SuppressWarnings("rawtypes")
+		
 		Class c = Election.class;
 		Field f = c.getDeclaredField("vc");
 		f.setAccessible(true);
 		Collection vcTest = (Collection) f.get(em.getElection());
 		int total = vcTest.getFormalCount() + vcTest.getInformalCount();
 		assertEquals(30, total);
+		
 	}
 	
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testLoadDefs() throws NoSuchFieldException, Exception {
 		Class c1 = Election.class;
-		Class c2 = Election.class;
-		Class c3 = Election.class;
 		
 		Field f1 = c1.getDeclaredField("name");
-		Field f2 = c2.getDeclaredField("enrolment");
-		Field f3 = c3.getDeclaredField("numCandidates");
+		Field f2 = c1.getDeclaredField("enrolment");
+		Field f3 = c1.getDeclaredField("numCandidates");
 		
 		f1.setAccessible(true);
 		String nameE = (String) f1.get(em.getElection());
@@ -151,6 +154,35 @@ public class PrefElectionTests {
 		assertEquals(enrolment, 83483);
 		assertEquals(candidateCount, 5);
 		
+	}
+	@Test(expected = FileNotFoundException.class)
+	public void testLoadDefsExpectedException() throws FileNotFoundException, IOException, ElectionException, NumbersException {
+		
+			em = new ElectionManager();
+			String strAddress = ".//data//PrefElectionsTests.lst";
+			em.getElectionsFromFile(strAddress);
+
+			elec = em.getElectionList();
+			
+			Election el = elec.get(0);
+			el.loadDefs();		
+	}
+	@SuppressWarnings("rawtypes")
+	@Test(expected = FileNotFoundException.class)
+	public void testLoadVotesExpectedException() throws FileNotFoundException, IOException, ElectionException, NumbersException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		em = new ElectionManager();
+		String strAddress = ".//data//elections.lst";
+		em.getElectionsFromFile(strAddress);
+
+		elec = em.getElectionList();
+		
+		Election el = elec.get(2);
+		el.loadDefs();
+		Class c1 = Election.class;
+		Field f1 = c1.getDeclaredField("name");
+		f1.setAccessible(true);
+		f1.set(el, "testLoadVotes");
+		el.loadVotes();
 	}
 }
 	

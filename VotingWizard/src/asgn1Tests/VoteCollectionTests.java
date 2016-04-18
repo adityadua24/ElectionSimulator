@@ -40,7 +40,7 @@ public class VoteCollectionTests {
 		try {
 			/* Main Processing Loop */
 			em = new ElectionManager();
-			String strAddress = ".//data//PrefElectionsTests.lst";
+			String strAddress = ".//data//elections.lst";
 			em.getElectionsFromFile(strAddress);
 
 			elec = em.getElectionList();
