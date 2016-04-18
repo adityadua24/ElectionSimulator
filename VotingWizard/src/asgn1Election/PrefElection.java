@@ -58,7 +58,7 @@ public class PrefElection extends Election {
 			str += this.reportCountStatus();
 		}
 		Candidate winner = this.clearWinner(winVotes);
-		str = str + this.reportWinner(winner); 
+		str = str + this.reportWinner(winner);
 		return str;
 	}
 

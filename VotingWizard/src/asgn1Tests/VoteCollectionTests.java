@@ -148,7 +148,6 @@ public class VoteCollectionTests {
 	public void testCountPrimaryVotes() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 	
 		Class c2 = Election.class;
-		
 		Field f = c2.getDeclaredField("cds");
 		f.setAccessible(true);
 		

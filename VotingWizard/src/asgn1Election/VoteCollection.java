@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import static org.junit.Assert.*;
 
 /**
  * 
@@ -74,6 +75,8 @@ public class VoteCollection implements asgn1Election.Collection  {
 	@Override
 	public void countPrefVotes(TreeMap<CandidateIndex, Candidate> cds,
 			CandidateIndex elim) {
+		assertNotNull(cds);
+		assertNotNull(elim);
 		for( Vote v: voteList) {
 			Vote invertedV = v.invertVote();
 			Iterator<Integer> itr  = invertedV.iterator();
